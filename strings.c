@@ -28,17 +28,17 @@ void String_input(String *string)
         string = NULL;
         return;
     }
-    for (int i = 0; i < 63; i++) {
-        if ((c = getchar()) != ('\n' || ' ')) {
+    for (int i = 0; i < 64; i++) {
+        if (scanf("%c", &c) != ("\n" || " ")) {
             string->string_data[i] = c;
         }
         string->string_data[i] = 0;
     }
-    string->string_data[64] = '\0';
+    string->string_data[63] = '\0';
 }
 char *String_return(String *string)
 {
-    char *string_out = (char *) malloc(sizeof(char *) * 65);
+    char *string_out = (char *) malloc(sizeof(char *) * 64);
     if (string_out == NULL) {
         return NULL;
     }
