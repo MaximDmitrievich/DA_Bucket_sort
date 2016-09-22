@@ -14,7 +14,7 @@ void Bucket_sort(Data *data)
     unsigned long long dig = 0;
     size_t n = data->occup;
     Data *bucket = Data_create(10, n + 1);
-    for (size_t i = 1; i <= 100000000000000000000; i *= 10) {
+    for (size_t i = 1; i <= 10000000000000000000; i *= 10) {
         for (size_t j = 0; j < n + 1; j++) {
             dig = (data->elements[i].key / i) % 10;
             Data_insert(bucket, dig, bucket->elements[dig + n].key++, data->elements[i].key, data->elements[i].string);
