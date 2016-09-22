@@ -1,15 +1,19 @@
-FLAGS = -std=c99 -Wall -Wextra -Werror -pedantic -w -pipe -O3 -fno-exceptions
-CC = gcc
-PROGRAM = Bucket_sort.exe
+FLAGS=-pedantic -Wall -std=c99 -Werror -Wno-sign-compare -lm
+COMPILLER=gcc
 
-all: main.c string data strings.h data.h
-	$(CC) $(FLAGS) main.c -L. -Wl,-rpath,. -o $(PROGRAM)
+all: start
 
-string: strings.c strings.h
-	$(CC) $(FLAGS) -c strings.c
+start:  data.o strings.o main.o
+	$(COMPILLER) $(FLAGS) -o Bucket_sort data.o strings.o main.o
 
-data: data.c data.h
-	$(CC) $(FLAGS) -c data.c
+main.o: main.c
+	$(COMPILLER) -c $(FLAGS) main.c
 
-clean:
-	rm -f *.o
+data.o: data.c
+	$(COMPILLER) -c $(FLAGS) data.c
+
+strings.o: strings.c
+	$(COMPILLER) -c $(FLAGS) strings.c
+
+clear:
+	-rm -f *.o *.gch Bucket_sort
