@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 Element **Data_create(size_t i, size_t j)
 {
@@ -49,9 +50,24 @@ void Data_print(Element **elems, size_t i, size_t j)
 		}
 	}
 }
-void Data_bucket_sort(Element **elems)
-{
 
+void Data_bucket_sort(Element **elems, size_t i, size_t j)
+{
+	const unsigned long long max = i * j;
+	Element **bucket = Data_create(10, max + 1);
+	for (unsigned long long digit = 1; digit < 1000000000000000000; digit *= 10) {
+		for (unsigned long long k = 0; k < max; k++) {
+			unsigned long long dig = (elems[k][0].key / digit) % 10;
+			Data_insert(bucket, 10 * (max + 1), dig, bucket[dig][max].key++, elems[k][0].key, elems[k][0].string);
+		}
+		unsigned long long idx = 0;
+		for (unsigned long long x = 0; x < 10; x++) {
+			for (unsigned long long y = 0; y < bucket[x][max].key; y++) {
+				Data_insert(elems, i * j, idx++, 1, bucket[x][y].key, bucket[x][y].string);
+			}
+		}
+	}
+	Data_destroy(bucket);
 }
 void Data_destroy(Element **elems)
 {

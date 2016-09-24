@@ -14,7 +14,7 @@ void Data_insert(Element **elems, size_t size, size_t i, size_t j, unsigned long
 unsigned long long Data_key_return(Element **elems, size_t i, size_t j);
 char *Data_string_return(Element **elems, size_t i, size_t j);
 void Data_print(Element **elems, size_t i, size_t j);
-void Data_bucket_sort(Element **elems);
+void Data_bucket_sort(Element **elems, size_t i, size_t j);
 void Data_destroy(Element **elems);
 
 #endif
