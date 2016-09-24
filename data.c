@@ -57,13 +57,13 @@ void Data_bucket_sort(Element **elems, size_t i, size_t j)
 	Element **bucket = Data_create(10, max + 1);
 	for (unsigned long long digit = 1; digit < 1000000000000000000; digit *= 10) {
 		for (unsigned long long k = 0; k < max; k++) {
-			unsigned long long dig = (elems[k][0].key / digit) % 10;
-			Data_insert(bucket, 10 * (max + 1), dig, bucket[dig][max].key++, elems[k][0].key, elems[k][0].string);
+			unsigned long long dig = (Data_key_return(elems, k, 1) / digit) % 10;
+			Data_insert(bucket, 10 * (max + 1), dig, bucket[dig][max].key++, Data_key_return(elems, k + 1, 1), Data_string_return(elems, k + 1, 1));
 		}
 		unsigned long long idx = 0;
 		for (unsigned long long x = 0; x < 10; x++) {
-			for (unsigned long long y = 0; y < bucket[x][max].key; y++) {
-				Data_insert(elems, i * j, idx++, 1, bucket[x][y].key, bucket[x][y].string);
+			for (unsigned long long y = 0; y < Data_key_return(bucket, x + 1, max + 1); y++) {
+				Data_insert(elems, i * j, idx++, 1, Data_key_return(bucket, x + 1, y + 1), Data_string_return(bucket, x + 1, y + 1));
 			}
 		}
 	}
