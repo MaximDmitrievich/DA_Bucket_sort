@@ -21,8 +21,16 @@ Element **Data_create(size_t i, size_t j)
 	}
 	return elems;
 }
-void Data_insert(Element **elems, size_t i, size_t j, unsigned long long key, char *string)
+void Data_insert(Element **elems, size_t size, size_t i, size_t j, unsigned long long key, char *string)
 {
+	if (sizeof(Element) * size < sizeof(Element) * i * j) {
+		elems = realloc(elems, sizeof(Element *) * i);
+		for (size_t k = 0; k < i; k++) {
+			elems[k] = realloc(elems[k], sizeof(Element) * j);
+		}
+	}
+	elems[i - 1][j - 1].key = key;
+	elems[i - 1][j - 1].string = String_cpy(string);
 
 }
 unsigned long long Data_key_return(Element **elems, size_t i, size_t j)

@@ -16,8 +16,9 @@ int main(void)
 	String_destroy(tmp);
 	String_destroy(string);
 
-	Element **array = Data_create(2, 2);
-	
+	Element **array = Data_create(1, 1);
+	Data_insert(array, 1 * 1, 1, 1, 12, "ddd");
+	Data_print(array, 1, 1);
 	Data_destroy(array);
 	return 0;
 }
