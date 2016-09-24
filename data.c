@@ -45,7 +45,7 @@ void Data_print(Element **elems, size_t i, size_t j)
 {
 	for (size_t ix = 0; ix < i; ix++) {
 		for (size_t jy = 0; jy < j; jy++) {
-			printf("%llu -- %s", Data_key_return(elems, ix, jy), Data_string_return(elems, ix, jy));
+			printf("%llu -- %s\n", Data_key_return(elems, ix, jy), Data_string_return(elems, ix, jy));
 		}
 	}
 }
