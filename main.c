@@ -27,8 +27,9 @@ int main(void)
 	Data_insert(array, 10 * 1, 8, 1, 4829839, "ddd");
 	Data_insert(array, 10 * 1, 9, 1, 99177748388, "ddd");
 	Data_insert(array, 10 * 1, 10, 1, 474, "ddd");
+	Data_print(array, 10, 1);
 	Data_bucket_sort(array, 10, 1);
 	Data_print(array, 10, 1);
-	Data_destroy(array);
+	Data_destroy(array, 10, 1);
 	return 0;
 }

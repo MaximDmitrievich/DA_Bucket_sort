@@ -6,6 +6,6 @@
 char *String_create();
 void String_input(char *string);
 char *String_cpy(char *string);
-void String_destroy();
+void String_destroy(char *string);
 
 #endif
