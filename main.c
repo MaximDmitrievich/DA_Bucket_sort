@@ -16,20 +16,22 @@ int main(void)
 	String_destroy(tmp);
 	String_destroy(string);
 
-	Element **array = Data_create(10, 1);
+	Element **array = Data_create(5, 2);
 	Data_insert(array, 10 * 1, 1, 1, 12, "ddd");
 	Data_insert(array, 10 * 1, 2, 1, 120, "ddd");
 	Data_insert(array, 10 * 1, 3, 1, 1238475478, "ddd");
 	Data_insert(array, 10 * 1, 4, 1, 122309, "ddd");
 	Data_insert(array, 10 * 1, 5, 1, 12238293, "ddd");
-	Data_insert(array, 10 * 1, 6, 1, 12339239, "ddd");
-	Data_insert(array, 10 * 1, 7, 1, 12233, "ddd");
-	Data_insert(array, 10 * 1, 8, 1, 4829839, "ddd");
-	Data_insert(array, 10 * 1, 9, 1, 99177748388, "ddd");
-	Data_insert(array, 10 * 1, 10, 1, 474, "ddd");
-	Data_print(array, 10, 1);
-	Data_bucket_sort(array, 10, 1);
-	Data_print(array, 10, 1);
-	Data_destroy(array, 10, 1);
+	Data_insert(array, 10 * 1, 1, 2, 12339239, "ddd");
+	Data_insert(array, 10 * 1, 2, 2, 12233, "ddd");
+	Data_insert(array, 10 * 1, 3, 2, 4829839, "ddd");
+	Data_insert(array, 10 * 1, 4, 2, 99177748388, "ddd");
+	Data_insert(array, 10 * 1, 5, 2, 474, "ddd");
+	insert_sort(array, 5, 2);
+	Data_print(array, 5, 2);
+	Data_bucket_sort(array, 5, 1);
+	Data_bucket_sort(array, 5, 2);
+	Data_print(array, 5, 2);
+	Data_destroy(array, 5, 2);
 	return 0;
 }

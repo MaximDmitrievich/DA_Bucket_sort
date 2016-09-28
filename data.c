@@ -44,40 +44,45 @@ char *Data_string_return(Element **elems, size_t i, size_t j)
 }
 void Data_print(Element **elems, size_t i, size_t j)
 {
-	for (size_t ix = 0; ix < i; ix++) {
-		for (size_t jy = 0; jy < j; jy++) {
+	for (size_t jy = 0; jy < j; jy++) {
+		for (size_t ix = 0; ix < i; ix++) {
 			printf("%llu -- %s\n",elems[ix][jy].key, elems[ix][jy].string);
 		}
 	}
 }
 
-// 1 8 4 4 6 7 4 4 0 7 3 7 0 9 5 5 1 6 1 5
+void insert_sort(Element **elems, size_t i, size_t idx)
+{
+	Element temp;
+	for (size_t k = 0; k < i; k++) {
+		temp = elems[k][idx];
+		for (size_t j = k - 1; j >= 0; j--) {
+			if (elems[k][idx].key < temp.key) {
+				break;
+			}
+			elems[j + 1][idx] = elems[j][idx];
+			elems[j][idx] = temp;
+		}
+	}
+}
 
 void Data_bucket_sort(Element **elems, size_t i, size_t j)
 {
 	size_t size_of_array = i * j;
 	Element **tmp = elems;
-	unsigned long long min = ULLONG_MAX;
-	unsigned long long max = 0;
-	for (size_t k = 0; k < i; k++) {
-		if (min < tmp[k][0].key) {
-			min = tmp[k][0].key;
-		}
-		if (max > tmp[k][0].key) {
-			max = tmp[k][0].key;
-		}
-	}
 	size_t idx = 1;
-	Element **buckets = Data_create(size_of_array + 1, 1);
+	Element **buckets = Data_create(size_of_array + 1, 10);
 	for (size_t k = 1; k <= size_of_array; k++) {
-		Data_insert(buckets, 10 * size_of_array, (tmp[k][0].key / ULLONG_MAX) * size_of_array, idx++, tmp[k][0].key, tmp[k][0].string);
+		Data_insert(buckets, 10 * size_of_array, (tmp[k][0].key / ULLONG_MAX) * size_of_array, tmp[k][0].key, idx++, tmp[k][0].string);
 	}
 	for(size_t k = 1; k <= idx; k++) {
-		Data_bucket_sort(buckets + k - 1, size_of_array + 1, 1);
+		insert_sort(buckets, size_of_array + 1, k);
 	}
 	for (size_t k = 1; k <= size_of_array + 1; k++) {
 		for (size_t n = 1; n <= idx; n++) {
-			Data_insert(elems, i * j, k, n, buckets[k][n].key, buckets[k][n].string);
+			if (buckets[n][k].string != NULL) {
+				Data_insert(elems, i * j, k, n, buckets[k][n].key, buckets[k][n].string);
+			}
 		}
 	}
 	Data_destroy(tmp, i, j);
