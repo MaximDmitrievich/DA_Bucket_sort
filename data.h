@@ -9,13 +9,13 @@ typedef struct elem {
 } Element;
 
 
-Element **Data_create(size_t i, size_t j);
-void Data_insert(Element **elems, size_t size, size_t i, size_t j, unsigned long long key, char *string);
-unsigned long long Data_key_return(Element **elems, size_t i, size_t j);
-char *Data_string_return(Element **elems, size_t i, size_t j);
-void Data_print(Element **elems, size_t i, size_t j);
-void Data_bucket_sort(Element **elems, size_t i, size_t j);
-void insert_sort(Element **elems, size_t i, size_t idx);
-void Data_destroy(Element **elems, size_t i, size_t j);
+Element **Data_create(int i, int j);
+void Data_insert(Element **elems, int size, int i, int j, unsigned long long key, char *string);
+unsigned long long Data_key_return(Element **elems, int i, int j);
+char *Data_string_return(Element **elems, int i, int j);
+void Data_print(Element **elems, int i, int j);
+void Data_bucket_sort(Element **elems, int i, int j);
+void insert_sort(Element **elems, int i, int idx);
+void Data_destroy(Element **elems, int i, int j);
 
 #endif
