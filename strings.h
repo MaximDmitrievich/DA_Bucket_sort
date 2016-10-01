@@ -3,9 +3,9 @@
 
 
 
-char *String_create();
-void String_input(char *string);
-char *String_cpy(char *string);
-void String_destroy(char *string);
+char *StringCreate();
+void StringInput(char *string);
+char *StringCpy(char *string);
+void StringDestroy(char **string);
 
 #endif
