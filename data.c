@@ -92,19 +92,7 @@ TItem *Get(TItem *item)
 	}
 	return tmp;
 }
-/*void list_insertion_sort(list_t* head) {
-    while (head->next) {
-        if (head->next->id < head->id) {
-            list_t* cut = list_cut(head->next);
-            while ((head->prev) && (cut->id < head->prev->id)) {
-                head = head->prev;
-            }
-            list_insert_prev(head, cut);
-        } else {
-            head = head->next;
-        }
-    }
-}*/
+
 void InsertSort(TList *list)
 {
 	printf("GG\n");
