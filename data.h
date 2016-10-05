@@ -2,27 +2,29 @@
 #define DATA_H
 #include "strings.h"
 
-typedef struct elem{
+typedef struct item {
 	unsigned long long key;
 	char *string;
-	struct elem *next;
-	struct elem *prev;
-	int elementsinlist;
-} Element;
+	struct item *next;
+	struct item *prev;
+} TItem;
 
-typedef struct vector{
-	Element *elems;
-	int occup;
+typedef struct list {
+	TItem *head;
+	int items;
+} TList;
+
+typedef struct vector {
+	TList *lists;
 	int avail;
-} Vector;
+	int occup;
+} TVector;
 
-Vector *VectorCreate();
-void VectorInsert(Vector *vect, int idx, unsigned long long key, char *string);
-int VectorSize(Vector *vect);
-int VectorListSize(Vector *vect, int idx);
-void VectorPrint(Vector *vect);
-void InsertSort(Vector *vect, int idx);
-void BucketSort(Vector *vect);
-void VectorDestroy(Vector **vect);
+TVector *VectorCreate();
+void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string);
+void VectorPrint(TVector *vector);
+void InsertSort(TList *list);
+void BucketSort(TVector *vector);
+void VectorDestroy(TVector **vector);
 
 #endif

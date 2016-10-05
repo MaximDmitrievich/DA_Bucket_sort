@@ -6,19 +6,23 @@
 
 int main(void)
 {
+	TVector *vector = VectorCreate();
 	char *string = StringCreate();
-	Vector *vector = VectorCreate();
 	unsigned long long key = 0;
-	for (int i = 0; i < 5; i++) {
-		scanf("%llu", &key);
+	int idx = 0;
+	while (scanf("%llu", &key) != EOF) {
 		StringInput(string);
-		VectorInsert(vector, i, key, string);
+		VectorInsert(vector, idx++, key, string);
 	}
-	VectorInsert(vector, 1, key, string);
-	printf("%d\n", VectorSize(vector));
-	printf("%d\n", VectorListSize(vector, 1));
-	StringDestroy(&string);
+	VectorInsert(vector, 3, 54, "string");
+	VectorInsert(vector, 3, 36, "string");
+	VectorInsert(vector, 3, 0, "string");
+	InsertSort(&(vector->lists[3]));
+	VectorPrint(vector);
+	printf("\n");
+	BucketSort(vector);
 	VectorPrint(vector);
 	VectorDestroy(&vector);
+	StringDestroy(&string);
 	return 0;
 }

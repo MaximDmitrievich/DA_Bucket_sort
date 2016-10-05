@@ -4,111 +4,160 @@
 #include <stdlib.h>
 #include <limits.h>
 
-Vector *VectorCreate()
+
+TVector *VectorCreate()
 {
-	Vector *vect = (Vector *) malloc(sizeof(Vector));
-	if (vect == NULL) {
+	TVector *vector = (TVector *) malloc(sizeof(TVector));
+	if (vector == NULL) {
 		exit(EXIT_SUCCESS);
 	}
-	vect->occup = 0;
-	vect->avail = 16;
-	vect->elems = (Element *) malloc(sizeof(Element) * vect->avail);
-	for (int i = 0; i < vect->avail; i++) {
-		vect->elems[i].string = NULL;
-		vect->elems[i].key = 0;
-		vect->elems[i].elementsinlist = 0;
-		vect->elems[i].next = NULL;
-		vect->elems[i].prev = NULL;
+	vector->avail = 4;
+	vector->occup = 0;
+	vector->lists = (TList *) calloc(sizeof(TList), vector->avail);
+	if (vector->lists == NULL) {
+		free(vector);
+		exit(EXIT_SUCCESS);
 	}
-	return vect;
+	return vector;
 }
-void VectorInsert(Vector *vect, int idx, unsigned long long key, char *string)
+
+void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string)
 {
-	if (vect->avail == vect->occup) {
-		vect->avail *= 2;
-		vect->elems = (Element *) realloc(vect->elems, sizeof(Element) * vect->avail);
+	if (vector->avail == vector->occup) {
+		vector->avail *= 2;
+		vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
 	}
-	if (vect->avail < idx) {
-		vect->avail = idx + 1;
-		vect->elems = (Element *) realloc(vect->elems, sizeof(Element) * vect->avail);
+	if (vector->avail < idx) {
+		vector->avail *= idx;
+		vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
 	}
-	if (vect->elems[idx].string == NULL) {
-		vect->elems[idx].string = StringCpy(string);
-		vect->elems[idx].key = key;
-		vect->elems[idx].elementsinlist++;
-		vect->elems[idx].next = NULL;
-		vect->elems[idx].prev = NULL;
-		vect->occup++;
+	if (vector->lists[idx].head == NULL) {
+		vector->lists[idx].head = (TItem *) calloc(sizeof(TItem), 1);
+		vector->lists[idx].head->key = key;
+		vector->lists[idx].head->string = StringCpy(string);
+		vector->lists[idx].head->next = NULL;
+		vector->lists[idx].head->prev = NULL;
+		vector->lists[idx].items = 1;
+		vector->occup++;
 	} else {
-		if (vect->elems[idx].next == NULL) {
-			vect->elems[idx].next = (Element *) malloc(sizeof(Element));
-			(vect->elems[idx].next)->prev = NULL;
-			(vect->elems[idx].next)->string = StringCpy(string);
-			(vect->elems[idx].next)->key = key;
-			vect->elems[idx].elementsinlist++;
+		TItem *tmp = vector->lists[idx].head;
+		while (tmp->next != NULL) {
+			tmp = tmp->next;
+		}
+		tmp->next = (TItem *) calloc(sizeof(TItem), 1);
+		tmp->next->key = key;
+		tmp->next->string = StringCpy(string);
+		tmp->next->next = NULL;
+		tmp->next->prev = tmp;
+		vector->lists[idx].items++;
+	}
+}
+
+void VectorPrint(TVector *vector)
+{
+	for (int i = 0; i < vector->avail; i++) {
+		if (vector->lists[i].head != NULL) {
+			printf("%llu ", vector->lists[i].head->key);
+			printf("%s\n", vector->lists[i].head->string);
+			if (vector->lists[i].items > 0) {
+				TItem *tmp = vector->lists[i].head;
+				while (tmp->next != NULL) {
+					tmp = tmp->next;
+					printf(" -- %llu", tmp->key);
+					printf(" %s\n",tmp->string);
+				}
+			}
+		}
+	}
+}
+
+void LstInsrt(TItem *a, TItem *b)
+{
+	b->prev = a->prev;
+	b->next = a;
+	a->prev = b;
+	if (b->prev != NULL) {
+		b->prev->next = b;
+	}
+}
+
+TItem *Get(TItem *item)
+{
+	TItem *tmp = item;
+	if (item->next != NULL) {
+		item->next->prev = item->prev;
+	}
+	if(tmp->prev != NULL) {
+		item->prev->next = item->next;
+	}
+	return tmp;
+}
+/*void list_insertion_sort(list_t* head) {
+    while (head->next) {
+        if (head->next->id < head->id) {
+            list_t* cut = list_cut(head->next);
+            while ((head->prev) && (cut->id < head->prev->id)) {
+                head = head->prev;
+            }
+            list_insert_prev(head, cut);
+        } else {
+            head = head->next;
+        }
+    }
+}*/
+void InsertSort(TList *list)
+{
+	printf("GG\n");
+	while (list->head->next != NULL) {
+		if (list->head->next->key < list->head->key) {
+			TItem *tmp = Get(list->head->next);
+			while ((list->head->prev != NULL) && (tmp->key < list->head->key)) {
+				list->head = list->head->prev;
+			}
+			LstInsrt(list->head, tmp);
 		} else {
-			Element *temp = &(vect->elems[idx]);
-			Element *tempprev = NULL;
-			while (temp->next != NULL) {
-				tempprev = temp;
-				temp = temp->next;
-				temp->prev = tempprev;
-			}
-			temp->next = (Element *) malloc(sizeof(Element));
-			temp->next->string = StringCpy(string);
-			temp->next->key = key;
-			temp->next->next = NULL;
-			temp->prev = tempprev;
-			vect->elems[idx].elementsinlist++;
-		}
-	}
-
-}
-int VectorSize(Vector *vect)
-{
-	return vect->occup;
-}
-int VectorListSize(Vector *vect, int idx)
-{
-	return vect->elems[idx].elementsinlist;
-}
-void VectorPrint(Vector *vect)
-{
-	for (int i = 0; i < vect->occup; i++) {
-		printf("%llu ", vect->elems[i].key);
-		printf("%s\n", vect->elems[i].string);
-		if (vect->elems[i].elementsinlist > 0) {
-			Element *temp = &(vect->elems[i]);
-			while (temp->next != NULL) {
-				temp = temp->next;
-				printf(" %llu ", temp->key);
-				printf("%s\n", temp->string);
-			}
+			list->head = list->head->next;
 		}
 	}
 }
-void InsertSort(Vector *vect, int idx)
-{
 
-}
-void BucketSort(Vector *vect)
+void BucketSort(TVector *vector)
 {
-
-}
-void VectorDestroy(Vector **vect)
-{
-	for (int i = 0; i < (*vect)->avail; i++) {
-		if ((*vect)->elems[i].elementsinlist > 0) {
-			Element *temp = NULL;
-			while ((*vect)->elems[i].next != NULL) {
-				temp = (*vect)->elems[i].next;
-				(*vect)->elems[i].next = temp->next;
-				free(temp);
-			}
-		}
-		StringDestroy(&(*vect)->elems[i].string);
+	int n = vector->occup;
+	TVector *buckets = VectorCreate();
+	for (int i = 0; i <= n; i++) {
+		VectorInsert(buckets, (vector->lists[i].head->key * n) / ULLONG_MAX, vector->lists[i].head->key, vector->lists[i].head->string);
 	}
-	free((*vect)->elems);
-	free(*vect);
-	*vect = NULL;
+	for (int i = 0; i < n; i++) {
+		if (buckets->lists[i].items > 1) {
+			InsertSort(&(buckets->lists[i]));
+		}
+	}
+	int k = 0;
+	TVector *out = VectorCreate();
+	for (int i = 0; i < n; i++) {
+		TItem *tmp = buckets->lists[i].head;
+		while (tmp != NULL) {
+			VectorInsert(out, k++, tmp->key, tmp->string);
+			tmp = tmp->next;
+		}
+	}
+	VectorDestroy(&vector);
+	vector = out;
+	out = NULL;
+}
+void VectorDestroy(TVector **vector)
+{
+	TItem *tmp = NULL;
+	for (int i = 0; i < (*vector)->avail; i++) {
+		while ((*vector)->lists[i].head != NULL) {
+			StringDestroy(&(*vector)->lists[i].head->string);
+			tmp = (*vector)->lists[i].head;
+			(*vector)->lists[i].head = tmp->next;
+			free(tmp);
+		}
+	}
+	free((*vector)->lists);
+	free(*vector);
+	*vector = NULL;
 }
