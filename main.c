@@ -17,6 +17,7 @@ int main(void)
 	VectorInsert(vector, 3, 54, "string");
 	VectorInsert(vector, 3, 36, "string");
 	VectorInsert(vector, 3, 0, "string");
+	VectorPrint(vector);
 	InsertSort(&(vector->lists[3]));
 	VectorPrint(vector);
 	printf("\n");

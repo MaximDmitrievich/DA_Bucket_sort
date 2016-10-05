@@ -6,7 +6,6 @@ typedef struct item {
 	unsigned long long key;
 	char *string;
 	struct item *next;
-	struct item *prev;
 } TItem;
 
 typedef struct list {
