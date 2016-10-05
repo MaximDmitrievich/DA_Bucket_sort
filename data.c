@@ -28,7 +28,7 @@ void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string
 		vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
 	}
 	if (vector->avail < idx) {
-		vector->avail *= idx;
+		vector->avail = idx;
 		vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
 	}
 	if (vector->lists[idx].head == NULL) {
@@ -37,7 +37,7 @@ void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string
 		vector->lists[idx].head->string = StringCpy(string);
 		vector->lists[idx].head->next = NULL;
 		vector->lists[idx].head->prev = NULL;
-		vector->lists[idx].items = 1;
+		vector->lists[idx].items++;
 		vector->occup++;
 	} else {
 		TItem *tmp = vector->lists[idx].head;
@@ -71,42 +71,26 @@ void VectorPrint(TVector *vector)
 	}
 }
 
-void LstInsrt(TItem *a, TItem *b)
-{
-	b->prev = a->prev;
-	b->next = a;
-	a->prev = b;
-	if (b->prev != NULL) {
-		b->prev->next = b;
-	}
-}
-
-TItem *Get(TItem *item)
-{
-	TItem *tmp = item;
-	if (item->next != NULL) {
-		item->next->prev = item->prev;
-	}
-	if(tmp->prev != NULL) {
-		item->prev->next = item->next;
-	}
-	return tmp;
-}
-
 void InsertSort(TList *list)
 {
-	printf("GG\n");
-	while (list->head->next != NULL) {
-		if (list->head->next->key < list->head->key) {
-			TItem *tmp = Get(list->head->next);
-			while ((list->head->prev != NULL) && (tmp->key < list->head->key)) {
-				list->head = list->head->prev;
-			}
-			LstInsrt(list->head, tmp);
+	TItem *tmp = list->head;
+	TItem *newhead = NULL;
+	while (tmp != NULL) {
+		TItem *node = tmp;
+		tmp = tmp->next;
+		if (newhead == NULL || node->key < newhead->key) {
+			node->next = newhead;
+			newhead = node;
 		} else {
-			list->head = list->head->next;
+			TItem *current = newhead;
+			while (current->next != NULL && !(node->key < current->next->key)) {
+				current = current->next;
+			}
+			node->next = current->next;
+			current->next = node;
 		}
 	}
+	list->head = newhead;
 }
 
 void BucketSort(TVector *vector)
@@ -114,7 +98,7 @@ void BucketSort(TVector *vector)
 	int n = vector->occup;
 	TVector *buckets = VectorCreate();
 	for (int i = 0; i <= n; i++) {
-		VectorInsert(buckets, (vector->lists[i].head->key * n) / ULLONG_MAX, vector->lists[i].head->key, vector->lists[i].head->string);
+		VectorInsert(buckets, (double) n * (vector->lists[i].head->key / ULLONG_MAX), vector->lists[i].head->key, vector->lists[i].head->string);
 	}
 	for (int i = 0; i < n; i++) {
 		if (buckets->lists[i].items > 1) {
