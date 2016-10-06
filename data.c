@@ -83,6 +83,9 @@ void VectorPrint(TVector *vector)
 
 void InsertSort(TList *list)
 {
+	if (list->items < 2 && list->head == NULL) {
+		return;
+	}
 	TItem *tmp = list->head;
 	TItem *newhead = NULL;
 	while (tmp != NULL) {
@@ -105,30 +108,38 @@ void InsertSort(TList *list)
 
 void BucketSort(TVector *vector)
 {
-	int n = vector->occup;
-	int idx = 0;
-	TVector *buckets = VectorCreate();
-	for (int i = 0; i < n; i++) {
-		idx = (int) n * ((double)vector->lists[i].head->key / ULLONG_MAX);
-		VectorInsert(buckets, idx, vector->lists[i].head->key, vector->lists[i].head->string);
-	}
-	for (int i = 0; i < n; i++) {
-		if (buckets->lists[i].items > 1) {
-			InsertSort(&(buckets->lists[i]));
+	unsigned long long min = ULLONG_MAX;
+	unsigned long long max = 0;
+	for (int i = 0; i < vector->occup; i++) {
+		if (vector->lists[i].head->key < min) {
+			min = vector->lists[i].head->key;
+		}
+		if (vector->lists[i].head->key > max) {
+			max = vector->lists[i].head->key;
 		}
 	}
+	double range = max - min;
+	int index = 0;
+	TVector *buckets = VectorCreate();
+	for (int i = 0; i < vector->occup; i++) {
+		index = (int) vector->occup * (vector->lists[i].head->key / range);
+		VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
+	}
+	for (int i = 0; i < buckets->occup; i++) {
+		InsertSort(&buckets->lists[i]);
+	}
+	VectorDestroy(&vector);
+	vector = VectorCreate();
+	TItem *tmp = NULL;
 	int k = 0;
-	TVector *out = VectorCreate();
-	for (int i = 0; i < n; i++) {
-		TItem *tmp = buckets->lists[i].head;
+	for (int i = 0; i < buckets->avail; i++) {
+		tmp = buckets->lists[i].head;
 		while (tmp != NULL) {
-			VectorInsert(out, k++, tmp->key, tmp->string);
+			VectorInsert(vector, k++, tmp->key, tmp->string);
 			tmp = tmp->next;
 		}
 	}
-	VectorDestroy(&vector);
-	vector = out;
-	out = NULL;
+	tmp = NULL;
 }
 void VectorDestroy(TVector **vector)
 {
