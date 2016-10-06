@@ -109,10 +109,8 @@ void BucketSort(TVector *vector)
 	int idx = 0;
 	TVector *buckets = VectorCreate();
 	for (int i = 0; i < n; i++) {
-		printf("\n GGG \n");
-		idx = (double) n * (vector->lists[i].head->key / ULLONG_MAX);
+		idx = (int) n * ((double)vector->lists[i].head->key / ULLONG_MAX);
 		VectorInsert(buckets, idx, vector->lists[i].head->key, vector->lists[i].head->string);
-		printf("\n GGG \n");
 	}
 	for (int i = 0; i < n; i++) {
 		if (buckets->lists[i].items > 1) {
