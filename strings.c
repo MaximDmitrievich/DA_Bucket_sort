@@ -21,8 +21,12 @@ void StringInput(char *string)
 	char c = 0;
 	int i = 0;
 	while ((c = getchar()) != '\n' && i != 64) {
-		string[i] = c;
-		i++;
+		if ((c == '\t') && (c == '\v')) {
+			continue;
+		} else {
+			string[i] = c;
+			i++;
+		}
 	}
 	string[64] = '\0';
 }
