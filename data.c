@@ -11,12 +11,16 @@ TVector *VectorCreate()
 	if (vector == NULL) {
 		exit(EXIT_SUCCESS);
 	}
-	vector->avail = 4;
+	vector->avail = 8;
 	vector->occup = 0;
-	vector->lists = (TList *) calloc(sizeof(TList), vector->avail);
+	vector->lists = (TList *) malloc(sizeof(TList) * vector->avail);
 	if (vector->lists == NULL) {
 		free(vector);
 		exit(EXIT_SUCCESS);
+	}
+	for (int i = 0; i < vector->avail; i++) {
+		vector->lists[i].head = NULL;
+		vector->lists[i].items = 0;
 	}
 	return vector;
 }
@@ -25,36 +29,39 @@ void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string
 {
 	if (vector->avail == vector->occup) {
 		vector->avail *= 2;
-		printf("\n------avail:%d\n", vector->avail);
 		vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
+		for (int i = vector->occup; i < vector->avail; i++) {
+			vector->lists[i].head = NULL;
+			vector->lists[i].items = 0;
+		}
 	}
 	if (vector->avail < idx) {
-		vector->avail = idx;
+		while (vector->avail < idx) {
+			vector->avail *= 2;
+		}
 		vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
+		for (int i = vector->occup; i < vector->avail; i++) {
+			vector->lists[i].head = NULL;
+			vector->lists[i].items = 0;
+		}
 	}
 	if (vector->lists[idx].head == NULL) {
-		vector->lists[idx].head = (TItem *) calloc(sizeof(TItem), 1);
+		vector->lists[idx].head = (TItem *) malloc(sizeof(TItem));
 		vector->lists[idx].head->key = key;
 		vector->lists[idx].head->string = StringCpy(string);
 		vector->lists[idx].head->next = NULL;
-		printf("\n------Items:%d\n", vector->lists[idx].items);
-		printf("\n------occup:%d\n", vector->occup);
 		vector->lists[idx].items++;
-		printf("\n------Items:%d\n", vector->lists[idx].items);
 		vector->occup++;
-		printf("\n------occup:%d\n", vector->occup);
 	} else {
 		TItem *tmp = vector->lists[idx].head;
-		while (tmp != NULL) {
+		while (tmp->next != NULL) {
 			tmp = tmp->next;
 		}
-		tmp = (TItem *) calloc(sizeof(TItem), 1);
-		tmp->key = key;
-		tmp->string = StringCpy(string);
-		tmp->next = NULL;
-		printf("\n------Items:%d\n", vector->lists[idx].items);
+		tmp->next = (TItem *) malloc(sizeof(TItem));
+		tmp->next->key = key;
+		tmp->next->string = StringCpy(string);
+		tmp->next->next = NULL;
 		vector->lists[idx].items++;
-		printf("\n------Items:%d\n", vector->lists[idx].items);
 	}
 }
 
@@ -67,7 +74,7 @@ void VectorPrint(TVector *vector)
 			TItem *tmp = vector->lists[i].head;
 			while (tmp->next != NULL) {
 				tmp = tmp->next;
-				printf("--%llu ", tmp->key);
+				printf(" --%llu ", tmp->key);
 				printf("%s\n", tmp->string);
 			}
 		}
@@ -99,9 +106,13 @@ void InsertSort(TList *list)
 void BucketSort(TVector *vector)
 {
 	int n = vector->occup;
+	int idx = 0;
 	TVector *buckets = VectorCreate();
-	for (int i = 0; i <= n; i++) {
-		VectorInsert(buckets, (double) n * (vector->lists[i].head->key / ULLONG_MAX), vector->lists[i].head->key, vector->lists[i].head->string);
+	for (int i = 0; i < n; i++) {
+		printf("\n GGG \n");
+		idx = (double) n * (vector->lists[i].head->key / ULLONG_MAX);
+		VectorInsert(buckets, idx, vector->lists[i].head->key, vector->lists[i].head->string);
+		printf("\n GGG \n");
 	}
 	for (int i = 0; i < n; i++) {
 		if (buckets->lists[i].items > 1) {
