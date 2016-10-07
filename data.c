@@ -157,7 +157,7 @@ void VectorDestroy(TVector **vector)
 	TItem *tmp = NULL;
 	for (int i = 0; i < (*vector)->avail; i++) {
 		while ((*vector)->lists[i].head != NULL) {
-			StringDestroy(&(*vector)->lists[i].head->string);
+			StringDestroy(&((*vector)->lists[i].head->string));
 			tmp = (*vector)->lists[i].head;
 			(*vector)->lists[i].head = tmp->next;
 			free(tmp);
