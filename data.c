@@ -80,6 +80,19 @@ void VectorPrint(TVector *vector)
 	}
 }
 
+void VectorClear(TVector *vector)
+{
+	TItem *tmp = NULL;
+	for (int i = 0; i < vector->avail; i++) {
+		while (vector->lists[i].head != NULL) {
+			StringDestroy(&(vector->lists[i].head->string));
+			tmp = vector->lists[i].head;
+			vector->lists[i].head = tmp->next;
+			free(tmp);
+		}
+	}
+}
+
 void InsertSort(TList *list)
 {
 	if ((list->items < 2) && (list->head == NULL)) {
@@ -139,8 +152,8 @@ void BucketSort(TVector *vector)
 			InsertSort(&buckets->lists[i]);
 		}
 	}
-	VectorDestroy(&vector);
-	vector = VectorCreate();
+	VectorClear(vector);
+	TItem *tmp = NULL;
 	int k = 0;
 	for (int i = 0; i < buckets->avail; i++) {
 		tmp = buckets->lists[i].head;
