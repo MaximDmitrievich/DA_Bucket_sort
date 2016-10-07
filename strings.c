@@ -15,20 +15,12 @@ char *StringCreate()
 }
 void StringInput(char *string)
 {
-	for (int i = 0; i < 64; i++) {
-		string[i] = 0;
-	}
-	char c = 0;
-	int i = 0;
-	while ((c = getchar()) != '\n' && i != 64) {
-		if ((c == '\t') && (c == '\v')) {
-			continue;
-		} else {
-			string[i] = c;
-			i++;
+	scanf("%s", string);
+	if (strlen(string) < 64) {
+		for (int i = strlen(string); i <= 64; i++) {
+			string[i] = '\0';
 		}
 	}
-	string[64] = '\0';
 }
 
 char *StringCpy(char *string)

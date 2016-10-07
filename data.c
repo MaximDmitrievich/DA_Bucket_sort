@@ -69,8 +69,7 @@ void VectorPrint(TVector *vector)
 {
 	for (int i = 0; i < vector->occup; i++) {
 		if (vector->lists[i].head != NULL) {
-			printf("%llu ", vector->lists[i].head->key);
-			printf("%s\n", vector->lists[i].head->string);
+			printf("%llu\t%s\n", vector->lists[i].head->key, vector->lists[i].head->string);
 			TItem *tmp = vector->lists[i].head;
 			while (tmp->next != NULL) {
 				tmp = tmp->next;
@@ -83,7 +82,7 @@ void VectorPrint(TVector *vector)
 
 void InsertSort(TList *list)
 {
-	if (list->items < 2 && list->head == NULL) {
+	if ((list->items < 2) && (list->head == NULL)) {
 		return;
 	}
 	TItem *tmp = list->head;
@@ -104,29 +103,41 @@ void InsertSort(TList *list)
 		}
 	}
 	list->head = newhead;
+	tmp = NULL;
+	newhead = NULL;
 }
 
 void BucketSort(TVector *vector)
 {
+	if (vector->occup < 2) {
+		return;
+	}
 	unsigned long long min = ULLONG_MAX;
 	unsigned long long max = 0;
 	for (int i = 0; i < vector->occup; i++) {
-		if (vector->lists[i].head->key < min) {
+		if ((vector->lists[i].head != NULL) && (vector->lists[i].head->key < min)) {
 			min = vector->lists[i].head->key;
 		}
-		if (vector->lists[i].head->key > max) {
+		if ((vector->lists[i].head != NULL) && (vector->lists[i].head->key > max)) {
 			max = vector->lists[i].head->key;
 		}
+	}
+	if (min == max) {
+		return;
 	}
 	double range = max - min;
 	int index = 0;
 	TVector *buckets = VectorCreate();
 	for (int i = 0; i < vector->occup; i++) {
 		index = (int) vector->occup * (vector->lists[i].head->key / range);
-		VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
+		if (vector->lists[i].head != NULL) {
+			VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
+		}
 	}
 	for (int i = 0; i < buckets->occup; i++) {
-		InsertSort(&buckets->lists[i]);
+		if (buckets->lists[i].head != NULL) {
+			InsertSort(&buckets->lists[i]);
+		}
 	}
 	VectorDestroy(&vector);
 	vector = VectorCreate();
@@ -139,7 +150,6 @@ void BucketSort(TVector *vector)
 			tmp = tmp->next;
 		}
 	}
-	tmp = NULL;
 }
 void VectorDestroy(TVector **vector)
 {
