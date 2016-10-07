@@ -139,7 +139,6 @@ void BucketSort(TVector *vector)
 			InsertSort(&buckets->lists[i]);
 		}
 	}
-	VectorDestroy(&vector);
 	vector = VectorCreate();
 	TItem *tmp = NULL;
 	int k = 0;
