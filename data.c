@@ -150,6 +150,7 @@ void BucketSort(TVector *vector)
 			tmp = tmp->next;
 		}
 	}
+	VectorDestroy(&buckets);
 }
 void VectorDestroy(TVector **vector)
 {
