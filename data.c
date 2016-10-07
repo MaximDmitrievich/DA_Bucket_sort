@@ -140,20 +140,17 @@ void BucketSort(TVector *vector)
 		}
 	}
 	VectorDestroy(&vector);
-	TVector **out;
 	*out = VectorCreate();
-	TItem *tmp = NULL;
+	vector = NULL;
 	int k = 0;
 	for (int i = 0; i < buckets->avail; i++) {
 		tmp = buckets->lists[i].head;
 		while (tmp != NULL) {
-			VectorInsert((*out), k++, tmp->key, tmp->string);
+			VectorInsert(vector, k++, tmp->key, tmp->string);
 			tmp = tmp->next;
 		}
 	}
 	VectorDestroy(&buckets);
-	vector = *out;
-	*out = NULL;
 }
 void VectorDestroy(TVector **vector)
 {
