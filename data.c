@@ -145,12 +145,12 @@ void BucketSort(TVector *vector)
 	int index = 0;
 	TVector *buckets = VectorCreate();
 	for (int i = 0; i < vector->occup; i++) {
-		index = (int) (vector->occup) * (vector->lists[i].head->key / range);
+		index = (int) vector->avail * (vector->lists[i].head->key / range);
 		if (vector->lists[i].head != NULL) {
 			VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
 		}
 	}
-	for (int i = 0; i < buckets->occup; i++) {
+	for (int i = 0; i < buckets->avail; i++) {
 		if (buckets->lists[i].head != NULL) {
 			InsertSort(&buckets->lists[i]);
 		}
