@@ -7,20 +7,16 @@
 
 TVector *VectorCreate()
 {
-	TVector *vector = (TVector *) malloc(sizeof(TVector));
+	TVector *vector = (TVector *) calloc(sizeof(TVector), 1);
 	if (vector == NULL) {
 		exit(EXIT_SUCCESS);
 	}
 	vector->avail = 8;
 	vector->occup = 0;
-	vector->lists = (TList *) malloc(sizeof(TList) * vector->avail);
+	vector->lists = (TList *) calloc(sizeof(TList), vector->avail);
 	if (vector->lists == NULL) {
 		free(vector);
 		exit(EXIT_SUCCESS);
-	}
-	for (int i = 0; i < vector->avail; i++) {
-		vector->lists[i].head = NULL;
-		vector->lists[i].items = 0;
 	}
 	return vector;
 }
@@ -40,13 +36,13 @@ void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string
 			vector->avail *= 2;
 		}
 		vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
-		for (int i = vector->occup; i < vector->avail; i++) {
+		for (int i = vector->occup + 1; i < vector->avail; i++) {
 			vector->lists[i].head = NULL;
 			vector->lists[i].items = 0;
 		}
 	}
 	if (vector->lists[idx].head == NULL) {
-		vector->lists[idx].head = (TItem *) malloc(sizeof(TItem));
+		vector->lists[idx].head = (TItem *) calloc(sizeof(TItem), 1);
 		vector->lists[idx].head->key = key;
 		vector->lists[idx].head->string = StringCpy(string);
 		vector->lists[idx].head->next = NULL;
@@ -57,7 +53,7 @@ void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string
 		while (tmp->next != NULL) {
 			tmp = tmp->next;
 		}
-		tmp->next = (TItem *) malloc(sizeof(TItem));
+		tmp->next = (TItem *) calloc(sizeof(TItem), 1);
 		tmp->next->key = key;
 		tmp->next->string = StringCpy(string);
 		tmp->next->next = NULL;
@@ -91,6 +87,13 @@ void VectorClear(TVector *vector)
 			free(tmp);
 		}
 	}
+	vector->occup = 0;
+	vector->avail = 8;
+	vector->lists = (TList *) realloc(vector->lists, sizeof(TList) * vector->avail);
+	for (int i = 0; i < vector->avail; i++) {
+	    vector->lists[i].head = NULL;
+	    vector->lists[i].items = 0;
+    }
 }
 
 void InsertSort(TList *list)
@@ -142,7 +145,7 @@ void BucketSort(TVector *vector)
 	int index = 0;
 	TVector *buckets = VectorCreate();
 	for (int i = 0; i < vector->occup; i++) {
-		index = (int) vector->occup * (vector->lists[i].head->key / range);
+		index = (int) (vector->occup) * (vector->lists[i].head->key / range);
 		if (vector->lists[i].head != NULL) {
 			VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
 		}
