@@ -91,9 +91,26 @@ void VectorDestroy(TVector **vector)
 			free(tmp);
 		}
 	}
-	free((*vector)->lists);
-	free(*vector);
+	if (sizeof((*vector)->lists) > 0) {
+	    free((*vector)->lists);
+    }
+    if (sizeof(vector) > 0) {
+	    free(*vector);
+    }
 	*vector = NULL;
+}
+
+void VectorClear(TVector **vector)
+{
+    TItem *tmp = NULL;
+	for (int i = 0; i < (*vector)->avail; i++) {
+		while ((*vector)->lists[i].head != NULL) {
+			StringDestroy(&((*vector)->lists[i].head->string));
+			tmp = (*vector)->lists[i].head;
+			(*vector)->lists[i].head = tmp->next;
+			free(tmp);
+		}
+	}
 }
 
 void InsertSort(TList *list)
@@ -155,17 +172,14 @@ void BucketSort(TVector *vector)
 			InsertSort(&buckets->lists[i]);
 		}
 	}
-	VectorDestroy(&vector);
-	vector = VectorCreate();
+	VectorClear(&vector);
 	int k = 0;
-	TItem *tmp = NULL;
 	for (int i = 0; i < buckets->avail; i++) {
-		tmp = buckets->lists[i].head;
-		while (buckets->lists[i].head != NULL) {
-			VectorInsert(vector, k++, buckets->lists[i].head->key, buckets->lists[i].head->string);
-			buckets->lists[i].head = buckets->lists[i].head->next;
+		TItem *tmp = buckets->lists[i].head;
+		while (tmp != NULL) {
+			VectorInsert(vector, k++, tmp->key, tmp->string);
+			tmp = tmp->next;
 		}
-		buckets->lists[i].head = tmp;
 		tmp = NULL;
 	}
 	VectorDestroy(&buckets);
