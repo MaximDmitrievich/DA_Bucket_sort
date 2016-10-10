@@ -14,6 +14,8 @@ int main(void)
 		StringInput(string);
 		VectorInsert(vector, idx++, key, string);
 	}
+	VectorPrint(vector);
+	printf("\n\n");
 	BucketSort(vector);
 	VectorPrint(vector);
 	VectorDestroy(&vector);

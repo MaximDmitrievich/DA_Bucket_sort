@@ -17,7 +17,7 @@ void StringInput(char *string)
 {
 	scanf("%s", string);
 	if (strlen(string) < 64) {
-		for (int i = strlen(string); i <= 64; i++) {
+		for (size_t i = strlen(string); i <= 64; i++) {
 			string[i] = '\0';
 		}
 	}
@@ -25,7 +25,7 @@ void StringInput(char *string)
 
 char *StringCpy(char *string)
 {
-	char *tmp = (char *) calloc(sizeof(char), strlen(string) + 1);
+	char *tmp = (char *) calloc(sizeof(char), strlen(string));
 	return strcpy(tmp, string);
 }
 void StringDestroy(char **string)
