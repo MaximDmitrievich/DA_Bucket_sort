@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 
 char *StringCreate()
@@ -15,7 +16,23 @@ char *StringCreate()
 }
 void StringInput(char *string)
 {
+	bzero(string, sizeof(char));
 	scanf("%s", string);
+	if (strlen(string) < 64) {
+		for (size_t i = strlen(string); i <= 64; i++) {
+			string[i] = '\0';
+		}
+	}
+}
+
+void StringInputTester(char *string)
+{
+	bzero(string, sizeof(char));
+	int n = 0;
+	n = rand() % 64;
+	for (int i = 0; i < n; i++) {
+		string[i] = 33 + rand() % 93;
+	}
 	if (strlen(string) < 64) {
 		for (size_t i = strlen(string); i <= 64; i++) {
 			string[i] = '\0';

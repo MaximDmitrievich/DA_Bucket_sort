@@ -3,6 +3,7 @@
 
 char *StringCreate();
 void StringInput(char *string);
+void StringInputTester(char *string);
 char *StringCpy(char *string);
 void StringDestroy(char **string);
 

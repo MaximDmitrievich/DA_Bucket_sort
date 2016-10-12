@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	TVector *vector = VectorCreate();
 	char *string = StringCreate();
