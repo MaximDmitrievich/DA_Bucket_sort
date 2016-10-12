@@ -17,3 +17,5 @@ tester: tester.c
 
 clean:
 	rm -f *.o
+	rm -f *.txt
+	rm -f *.stackdump

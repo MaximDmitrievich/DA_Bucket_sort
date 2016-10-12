@@ -11,7 +11,7 @@ TVector *VectorCreate()
 	if (vector == NULL) {
 		exit(EXIT_SUCCESS);
 	}
-	vector->avail = 8;
+	vector->avail = 4;
 	vector->occup = 0;
 	vector->lists = (TList *) malloc(sizeof(TList) * vector->avail);
 	if (vector->lists == NULL) {
@@ -163,7 +163,7 @@ void BucketSort(TVector *vector)
 	TVector *buckets = VectorCreate();
 	for (int i = 0; i < vector->occup; i++) {
 		if (vector->lists[i].head != NULL) {
-			index = (int) (vector->occup / 2) * (vector->lists[i].head->key / range);
+			index = (int) (vector->occup) * (vector->lists[i].head->key / range);
 			VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
 		}
 	}
