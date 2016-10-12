@@ -1,8 +1,7 @@
-#include "strings.h"
+#include "stringsio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 
 
 char *StringCreate()
@@ -16,7 +15,7 @@ char *StringCreate()
 }
 void StringInput(char *string)
 {
-	bzero(string, sizeof(char));
+	memset(string, '\0', sizeof(char));
 	scanf("%s", string);
 	if (strlen(string) < 64) {
 		for (size_t i = strlen(string); i <= 64; i++) {
@@ -27,7 +26,7 @@ void StringInput(char *string)
 
 void StringInputTester(char *string)
 {
-	bzero(string, sizeof(char));
+	memset(string, '\0', sizeof(char));
 	int n = 0;
 	n = rand() % 64;
 	for (int i = 0; i < n; i++) {

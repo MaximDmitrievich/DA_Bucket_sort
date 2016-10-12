@@ -1,4 +1,4 @@
-#include "strings.h"
+#include "stringsio.h"
 #include "data.h"
 #include <stdio.h>
 #include <stdlib.h>

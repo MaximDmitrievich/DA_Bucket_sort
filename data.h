@@ -1,6 +1,6 @@
 #ifndef DATA_H
 #define DATA_H
-#include "strings.h"
+#include "stringsio.h"
 
 typedef struct item {
 	unsigned long long key;
