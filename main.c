@@ -12,7 +12,8 @@ int main(int argc, char *argv[])
 	int idx = 0;
 	while (scanf("%llu", &key) != EOF) {
 		StringInput(string);
-		VectorInsert(vector, idx++, key, string);
+		VectorInsert(vector, idx, key, string);
+		idx++;
 	}
 	BucketSort(vector);
 	VectorPrint(vector);

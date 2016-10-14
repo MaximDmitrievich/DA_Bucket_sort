@@ -1,4 +1,4 @@
-FLAGS=-g -pedantic -Wall -std=c99 -Werror -Wno-sign-compare
+FLAGS=-g -pedantic -Wall -std=c99 -Werror -Wno-sign-compare 
 CC=gcc
 
 all: stringsio data main.c
