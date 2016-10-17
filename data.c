@@ -62,7 +62,7 @@ void VectorPrint(TVector *vector)
 {
 	for (int i = 0; i < vector->occup; i++) {
 		if (vector->lists[i].head != NULL) {
-			printf("%d -- %llu\t%s\n", i, vector->lists[i].head->key, vector->lists[i].head->string);
+			printf("%d -- %llu\t%s\n", i + 1, vector->lists[i].head->key, vector->lists[i].head->string);
 			TItem *tmp = vector->lists[i].head;
 			int k = 0;
 			while (tmp->next != NULL) {
@@ -148,15 +148,11 @@ void BucketSort(TVector *vector)
 			VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
 		}
 	}
-	VectorPrint(buckets);
-	printf("\n\n");
 	for (int i = 0; i < buckets->avail; i++) {
 		if (buckets->lists[i].head != NULL) {
 			InsertSort(&buckets->lists[i]);
 		}
 	}
-	VectorPrint(buckets);
-	printf("\n\n");
 	VectorDestroy(&vector);
 	vector = VectorCreate();
 	int k = 0;
