@@ -5,13 +5,17 @@
 #include <limits.h>
 #include <string.h>
 
-TVector *VectorCreate()
+TVector *VectorCreate(int size)
 {
 	TVector *vector = malloc(sizeof(TVector));
 	if (vector == NULL) {
 		exit(EXIT_SUCCESS);
 	}
-	vector->avail = 4;
+	if (size == 0) {
+		vector->avail = 4;
+	} else {
+		vector->avail = size;
+	}
 	vector->occup = 0;
 	vector->lists = malloc(sizeof(TList) * vector->avail);
 	if (vector->lists == NULL) {
@@ -27,9 +31,9 @@ TVector *VectorCreate()
 
 void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string)
 {
-	if ((vector->avail == vector->occup) || (vector->avail - 1 <= idx)) {
+	if ((vector->avail == vector->occup) || (vector->avail - 1 < idx)) {
 		vector->avail *= 2;
-		while (vector->avail - 1 <= idx) {
+		while (vector->avail - 1 < idx) {
 			vector->avail *= 2;
 		}
 		vector->lists = realloc(vector->lists, sizeof(TList) * vector->avail);
@@ -62,12 +66,12 @@ void VectorPrint(TVector *vector)
 {
 	for (int i = 0; i < vector->occup; i++) {
 		if (vector->lists[i].head != NULL) {
-			printf("%d -- %llu\t%s\n", i + 1, vector->lists[i].head->key, vector->lists[i].head->string);
+			printf("%d -- %llu\t%s\n", i + 1,  vector->lists[i].head->key, vector->lists[i].head->string);
 			TItem *tmp = vector->lists[i].head;
 			int k = 0;
 			while (tmp->next != NULL) {
 				tmp = tmp->next;
-				printf("  -- %d --%llu ", ++k, tmp->key);
+				printf(" -- %d -- %llu ", ++k, tmp->key);
 				printf("%s\n", tmp->string);
 			}
 		}
@@ -141,10 +145,10 @@ void BucketSort(TVector *vector)
 	}
 	double range = max - min;
 	int index = 0;
-	TVector *buckets = VectorCreate();
+	TVector *buckets = VectorCreate(vector->avail + 1);
 	for (int i = 0; i < vector->avail; i++) {
 		if (vector->lists[i].head != NULL) {
-			index = (int) (vector->occup) * (vector->lists[i].head->key / range);
+			index = (int) (vector->occup / 2) * (vector->lists[i].head->key / range);
 			VectorInsert(buckets, index, vector->lists[i].head->key, vector->lists[i].head->string);
 		}
 	}
@@ -154,7 +158,7 @@ void BucketSort(TVector *vector)
 		}
 	}
 	VectorDestroy(&vector);
-	vector = VectorCreate();
+	vector = VectorCreate(0);
 	int k = 0;
 	for (int i = 0; i < buckets->avail; i++) {
 		TItem *tmp = buckets->lists[i].head;

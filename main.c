@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-	TVector *vector = VectorCreate();
+	TVector *vector = VectorCreate(0);
 	char *string = StringCreate();
 	unsigned long long key = 0;
 	int idx = 0;

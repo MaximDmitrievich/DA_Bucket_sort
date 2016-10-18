@@ -28,7 +28,7 @@ void StringInputTester(char *string)
 {
 	memset(string, '\0', sizeof(char));
 	int n = 0;
-	n = rand() % 64;
+	n =  64;
 	for (int i = 0; i < n; i++) {
 		string[i] = 33 + rand() % 93;
 	}
