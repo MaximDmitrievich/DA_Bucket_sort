@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "FILE DIDN'T OPEN!\n");
         exit(EXIT_SUCCESS);
     }
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 6; i++) {
         key = rand();
         StringInputTester(string);
         fprintf(output, "%llu\t%s\r\n", key, string);

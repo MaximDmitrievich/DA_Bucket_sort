@@ -23,7 +23,7 @@ TVector *VectorCreate();
 void VectorInsert(TVector *vector, int idx, unsigned long long key, char *string);
 void VectorPrint(TVector *vector);
 void InsertSort(TList *list);
-void BucketSort(TVector *vector);
+TVector *BucketSort(TVector *vector);
 void VectorDestroy(TVector **vector);
 
 #endif

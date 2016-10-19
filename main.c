@@ -15,9 +15,14 @@ int main(int argc, char *argv[])
 		VectorInsert(vector, idx, key, string);
 		idx++;
 	}
-	BucketSort(vector);
-	VectorPrint(vector);
-	VectorDestroy(&vector);
+	TVector *out = BucketSort(vector);
+	if (out == NULL) {
+	    VectorPrint(vector);
+	    VectorDestroy(&vector);
+    } else {
+        VectorPrint(out);
+	    VectorDestroy(&out);
+    }
 	StringDestroy(&string);
 	return 0;
 }
